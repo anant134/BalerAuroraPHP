@@ -1,0 +1,8 @@
+payment sandbox changes
+- registration.php
+- booking.php
+- checkpayment.php
+- checkpaymentstatus.php
+- createqrfromroutine.php
+- sendmailbooking.php
+- testpage.php
