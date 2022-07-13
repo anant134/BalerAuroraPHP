@@ -10,27 +10,20 @@
     // $result_arr["resultvalue"]=array();
     $result=[];
     $requestfor=$params["requestfor"];
+
     switch ($requestfor) {
-        case 'getslots':
-            $query=json_encode($params["data"]);
-            $qr = excecutequery("call sp_getslots('".$query."')");
+        case 'getGuestArrived':
+            
+            $qr = excecutequery("call sp_getGuestArrived('{}')");
+            
             while ($row = $qr->fetch_assoc()) {
-                $id = $row['id'];
-                $isactive = $row['isactive'];
-                $description = $row['description'];
-                $starttime = $row['starttime'];
-                $endtime = $row['endtime'];
-                $timeinterval=$row["timeinterval"];
-                $boattype=$row["boattype"];
-           
+                $count = $row['count'];
+                $mnt = $row['mnt'];
+                $dt = $row['dt'];
                 $return_arr[] = array(
-                    "id" => $id,
-                    "description" => $description,
-                    "starttime" => $starttime,
-                    "endtime" => $endtime,
-                    "isactive"=>$isactive,
-                    "timeinterval"=>$timeinterval,
-                    "boattype"=>$boattype
+                    "count" => $count,
+                    "mnt" =>$mnt,
+                    "dt" =>$dt,
                 );
             }
             if(!(empty($return_arr))){
@@ -46,24 +39,19 @@
                 );
             }
             echo json_encode($result[0]);
-            break;
         break;
-        case 'slots':
-            $query=json_encode($params["data"]);
-            $dasa=json_decode($query, true);
-            if($dasa["flag"]=="u"){
-                $dasa["isactive"]=$dasa["isactive"]=="1"?1:0;
-                $query=json_encode($dasa);
-            }
-           
-            $qr = excecutequery("call sp_slot('".$query."')");
+        case 'getCollection':
+            
+            $qr = excecutequery("call sp_getCollection('{}')");
+            
             while ($row = $qr->fetch_assoc()) {
-                $id =$row['rowid'] ;
-                $errflag =$row['errflag'] ;
-                // $id = $row['rowid'];
+                $count = $row['count'];
+                $mnt = $row['mnt'];
+                $dt = $row['dt'];
                 $return_arr[] = array(
-                    "rowid" => $id,
-                    "errflag"=>$errflag
+                    "count" => $count,
+                    "mnt" =>$mnt,
+                    "dt" =>$dt,
                 );
             }
             if(!(empty($return_arr))){
@@ -75,14 +63,13 @@
             }else{
                 $result[]=array(
                     "resultkey"=>0,
-                    "resultvalue"=>"Error data not saved"
+                    "resultvalue"=>"No data  found"
                 );
             }
             echo json_encode($result[0]);
         break;
 
-    }
 
-
-
+      }
+    
 ?>

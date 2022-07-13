@@ -4,7 +4,7 @@ header("Access-Control-Allow-Methods: PUT, GET, POST");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 //include("dbconfig.php");
 //include("generateqr.php");
-require ('phpmailer/PHPMailerAutoload.php');	
+//include("sendmailbooking.php");
 try {
   function excecutequery($sqlquery)
 {
@@ -19,9 +19,9 @@ try {
 }
   function _generate_digest($params, $secret_key)
   {
-       ksort($params);
-       $data_string = '';
-       foreach ($params as $key => $value) { $data_string .= $value . '|'; }
+       ksort($params); 
+       $data_string = ''; 
+       foreach ($params as $key => $value) { $data_string .= $value . '|'; } 
        return sha1($data_string . $secret_key);
   }
   $data = file_get_contents('php://input');
@@ -48,35 +48,23 @@ try {
   $generateddigest="";
   //_generate_digest($rawdata,'b52477dc0080408713269429e82ce7f7');
   $incomingdigest =$responsdata["digest"] ;
+print_r("call sp_paymentreceivedlog('".$data."','".$postbackdatetime."','".$absolute_url."','".$responsdata["digest"]."','".$generateddigest."')");
   $qr = excecutequery("call sp_paymentreceivedlog('".$data."','".$postbackdatetime."','".$absolute_url."','".$responsdata["digest"]."','".$generateddigest."')");
-
   if (!empty($data)){
-       $myJSON=json_encode($data);
-       $responsdatanew=json_decode($data, true);
-
-       $reference_number=$responsdatanew["reference_number"];
-
-
-
-       if($responsdatanew["status"]=="success"){
-        $qrup = excecutequery("call sp_updatepaymentreceived('" . $reference_number . "')");
+       $myJSON=json_encode($data);  
+       $responsdata=json_decode($data, true);
+       if($responsdata["status"]=="success"){
         $url="https://maubantourism.smartpay.ph";
-        $qrveh = excecutequery("call sp_getregistrationinfo('".$reference_number."')");
+        $qr1 = excecutequery("call sp_getvehicleinfo('".$reference_number."')");
         $veh="";
-        
-       
-        while ($row3 = $qrveh->fetch_assoc()) {
-          
+        while ($row1 = $qr1->fetch_assoc()) {
            $veh=$veh.' <td
                 style="color: #153643;font-family: Arial, sans-serif;font-size: 16px;line-height: 24px;padding: 25px 0 0 0;">
                 <img src="'.$url.'/tourbookingphp/tempdata/'.$row1['filename'].'" alt="Creating Email Magic." width="80" height="80" style="display: block;" />
             </td>';
-         }
-       
+        }
         $qr2 = excecutequery("call sp_getregistrationinfo('".$reference_number."')");
-        //print_r($qr2);
-        while ($row2 = $qr2->fetch_assoc()) {
-           // print_r($row2['email']);
+          while ($row2 = $qr2->fetch_assoc()) {
             $Mto=$row2['email'];
             $message ='
             <!DOCTYPE html
@@ -344,40 +332,19 @@ try {
         </body>
 
         </html>';
-
           }
-          $mail = new PHPMailer(); // create a new object
-          $mail->IsSMTP(); // enable SMTP
-          $mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
-          $mail->SMTPAuth = true; // authentication enabled
-          $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for Gmail
-          $mail->Host = "smtp.gmail.com";
-          $mail->Port = 465; // or 587
-          $mail->IsHTML(true);
-          $mail->Username = "maubanmailer@gmail.com";
-          $mail->Password = "mauban@123";
-          $mail->setFrom("maubanmailer@gmail.com");
-          $mail->AddAddress($Mto);
-          $mail->Subject = "Mauban Tourism Receipt";
-          $mail->Body =  $message ;
-          $mail->addBcc("randyfutalan83@gmail.com");
-          $mail->addBcc("admin@smartpay.ph");
-          $mail->addBcc("anant.shetty.134@gmail.com");
-          if(!$mail->Send()) {
-          //   echo "Mailer Error: " . $mail->ErrorInfo;
-          } else {
-            //  echo "Message has been sent";
-          }
-      }
+         
+       }
    }else{
      $qr = excecutequery("call sp_paymentreceivedlog('".$data."','postbacknoresponse')");
    }
   http_response_code(200);
    exit;
 } catch (\Throwable $th) {
-
+  
   $qr = excecutequery("call sp_applicationlog('".$th->getMessage()."')");
   echo($th->getMessage());
   http_response_code(400);
   exit;
 }?>
+ 

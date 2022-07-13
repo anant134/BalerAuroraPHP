@@ -8,7 +8,7 @@ function sendmail($reference_number){
     include("dbconfig.php");
 //$url="https://maubantourism.smartpay.ph";
 //if($connectedtolive==0){
-    $url='https://tourism-test.smartpay.ph';
+    $url=$weburl;
 //}
 //$mail = new PHPMailer();
 

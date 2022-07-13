@@ -105,7 +105,7 @@ function random_string($length) {
             }
             // $boats=explode(",", $row["boatid"]);
             // for($i = 0;$i<count($boats);$i++){
-            //   // $conn->next_result();
+            //   $conn->next_result();
             //   $qr = excecutequery("call sp_getboatbyid('" . $boats[$i] "')");
              
             // }
@@ -113,8 +113,8 @@ function random_string($length) {
           //  echo ' <p style="margin:0px">Other Guest :'.$row["other"].'</p>';
             echo ' <p style="margin:0px">Parking Slots :'.$row["vehicle"].'</p>';
             echo '<p style="margin:0px">Kindly PRINT or SAVE QR Code and present at the Tourism office at Mauban Quezon Tourist Port </p>';
-            echo ' <p style="margin:0px">Thank you again, for questions and clarifications you may call Mauban Arts, Culture and Tourism (M-ACT) Oﬃce   Contact Nos. (042)7881292/09399368812/0999334866 </p>';                         
-            echo '09092127960/09088891693';
+            echo ' <p style="margin:0px">Thank you again, for questions and clarifications you may call Mauban Arts, Culture and Tourism (M-ACT) Oﬃce   Contact Nos. 042 7881292 </p>';                         
+            echo '09100716107/09633628861/09608516791/09070201103';
             echo '<p style="margin:0px">Or Contact Mauban Tourism on Messenger: </p>';
             echo '<p style="margin:0px"><a href="www.facebook.com/mauban.tourism">www.facebook.com/mauban.tourism </a></p></br>';
 

@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT, GET, POST");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
-include("dbconfig.php");
+//include("dbconfig.php");
 define("SECRETKEY", "i2ttourbooking");
 include("generateqr.php");
 ini_set('display_errors', 1);
@@ -23,28 +23,25 @@ function random_string1($length) {
 }
 ?>
 <?php
-    $qr1 = excecutequery("call sp_GetAllUnPaidTransaction()");
+function queryexcecute($sqlquery)
+{
+    $dbhost = 'mauban-rds.c3vmdc1lq3gg.ap-southeast-1.rds.amazonaws.com';
+    $dbuser = 'admin';
+    $dbpass = 'MaubanI2t123';
+    $db='tourbooking';
+    $conn = mysqli_connect($dbhost, $dbuser, $dbpass,$db) or die ("could not connect to mysql");
+    $result = $conn->query($sqlquery);
+    mysqli_close($conn);
+    return $result;
+}
+    $qr1 = queryexcecute("call sp_GetAllUnPaidTransaction()");
     $count=0;
-    //  $qr = excecutequery("call sp_getregistrationinfo('921B7469')");
    while ($row = $qr1->fetch_assoc()) {
-     
-    //if($connectedtolive==1){
-     // $url="https://api.smartpay.net.ph/order?reference_number=".$row["paymentreferencenumber"];
-    // }else{
-      $url="https://api-test.smartpay.net.ph/order?reference_number=".$row["paymentreferencenumber"];
-    // }
- 
-
-    //  $url="https://api.smartpay.net.ph/order?reference_number=".$row["paymentreferencenumber"];
-     // print_r();
-     
-       $result= geturl($url,$connectedtolive);
-      
-      // $query=json_encode($result);
+      $url="https://api.smartpay.net.ph/order?reference_number=".$row["paymentreferencenumber"];
+       $result= geturl($url);
        $manage = json_decode($result, true);
-     
        if($manage["status"]==1){
-           $qr = excecutequery("call sp_PaymentStatusUpdateByJob('" . $row["paymentreferencenumber"] . "','".json_encode($manage["results"]["data"])."')");
+           $qr = queryexcecute("call sp_PaymentStatusUpdateByJob('" . $row["paymentreferencenumber"] . "','".json_encode($manage["results"]["data"])."')");
            if($manage["results"]["data"]["status"]=="success"){
             
             //print_r($manage["results"]["data"]);
@@ -52,9 +49,9 @@ function random_string1($length) {
             try {
               //code...
              // $conn->next_result();
-              $qr = excecutequery("call sp_updatepaymentreceived('" . $row["paymentreferencenumber"] . "')");
+              $qr = queryexcecute("call sp_updatepaymentreceived('" . $row["paymentreferencenumber"] . "')");
             
-              //$qr = excecutequery("call sp_PaymentStatusUpdateByJob('" . $row["paymentreferencenumber"] . "','".json_encode($manage["results"]["data"])."')");
+              //$qr = queryexcecute("call sp_PaymentStatusUpdateByJob('" . $row["paymentreferencenumber"] . "','".json_encode($manage["results"]["data"])."')");
              // sendmail($row['paymentreferencenumber']);
               if($row["qrcode"]==""){
                 $filename=random_string1(6);
@@ -66,14 +63,14 @@ function random_string1($length) {
               
                 $qrfiles= genqr($array);
                 
-                $qr = excecutequery("call sp_updatepaymentreferencenumber('" .$row['paymentreferencenumber']. "','".$row["id"]."','".$qrfiles[0]["qrfilename"]."')");
+                $qr = queryexcecute("call sp_updatepaymentreferencenumber('" .$row['paymentreferencenumber']. "','".$row["id"]."','".$qrfiles[0]["qrfilename"]."')");
               
-                sendmail($row['paymentreferencenumber']); 
-                $qr = excecutequery("call sp_mailsent('".$row["paymentreferencenumber"]."')"); 
+               // sendmail($row['paymentreferencenumber']); 
+                $qr = queryexcecute("call sp_mailsent('".$row["paymentreferencenumber"]."')"); 
               }else{
                 if($row['ismailsend']==0){
-                  sendmail($row['paymentreferencenumber']); 
-                  $qr = excecutequery("call sp_mailsent('".$row["paymentreferencenumber"]."')"); 
+                 // sendmail($row['paymentreferencenumber']); 
+                  $qr = queryexcecute("call sp_mailsent('".$row["paymentreferencenumber"]."')"); 
                   
                 }
                
@@ -89,32 +86,30 @@ function random_string1($length) {
            //  sendmail($row['paymentreferencenumber']);
            }else{
             
-            $qr = excecutequery("call sp_updatepaymentstatus('" . $row["paymentreferencenumber"] . "','".$manage["results"]["data"]["status"]."')");
+            $qr = queryexcecute("call sp_updatepaymentstatus('" . $row["paymentreferencenumber"] . "','".$manage["results"]["data"]["status"]."')");
             
            }
         }
       
-       // echo ($manage["status"]);
-     // print_r($manage["results"]["data"]["status"]);
-   }
+    }
    
    
-    function  geturl($url,$connectedtolive){
+    function  geturl($url){
         $curl = curl_init();
-     
     //https://api-test.smartpay.net.ph/order
     //https://api.smartpay.net.ph/order
-    //if($connectedtolive==0){
-      $HTTPHEADER =array(
-          'Authorization: Bearer dypfHwt0s7QZ8XIh',
-          'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
-         );
+    // live iCA5gFJkrwLUZ4jW
+    // if($connectedtolive==0){
+    //   $HTTPHEADER =array(
+    //       'Authorization: Bearer dypfHwt0s7QZ8XIh',
+    //       'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
+    //      );
     // }else{
-    //     $HTTPHEADER =array(
-    //             'Authorization: Bearer iCA5gFJkrwLUZ4jW',
-    //             'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
-    //           );
-    // }
+        $HTTPHEADER =array(
+                'Authorization: Bearer iCA5gFJkrwLUZ4jW',
+                'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
+              );
+   // }
     curl_setopt_array($curl, array(
       CURLOPT_URL => $url,
       CURLOPT_RETURNTRANSFER => true,
@@ -127,10 +122,7 @@ function random_string1($length) {
       CURLOPT_POSTFIELDS => array('' => ''),
       CURLOPT_HTTPHEADER => $HTTPHEADER
     
-      //   CURLOPT_HTTPHEADER => array(
-      //   'Authorization: Bearer dypfHwt0s7QZ8XIh',
-      //   'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
-      // ),
+    
     
     ));
     

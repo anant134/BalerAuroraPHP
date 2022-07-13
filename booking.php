@@ -199,7 +199,7 @@
                     "id"=>$id,
                     "editrefnum"=>$editrefnum,
                     "refundrefnum"=>$refundrefnum,
-                   
+                    "partialpaymentid"=>$partialpaymentid,
                     "newtotalcharge"=>$newtotalcharge,
                     "partialpayment"=>$partialpayment,
                     "partialpaymentreferencenumber"=>$partialpaymentreferencenumber,
@@ -353,14 +353,14 @@
                         
                     );
                     //sandbox
-                   // if($connectedtolive==0){
+                    if($connectedtolive==0){
                         $digest=_generate_digest($rawdata,'b52477dc0080408713269429e82ce7f7');
-                    //}else{
+                    }else{
                      //live
                    
-                   //$digest=_generate_digest($rawdata,'090d30d2335f8bc11cf4c1f921a052ed');
+                   $digest=_generate_digest($rawdata,'090d30d2335f8bc11cf4c1f921a052ed');
                  
-                    //}
+                    }
                     $data = array( 
                         "merchant_order_no" => $return_arr[0]["paymentid"],
                         "amount" => $totalchrg,
@@ -408,19 +408,19 @@
     function  geturl($digest,$connectedtolive){
         $curl = curl_init();
       
-        //if($connectedtolive==0){
+        if($connectedtolive==0){
             $curlurl = "https://api-test.smartpay.net.ph/order";
             $HTTPHEADER =array(
                 'Authorization: Bearer dypfHwt0s7QZ8XIh',
                 'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
                );
-        // }else{
-        //     $curlurl = "https://api.smartpay.net.ph/order";
-        //     $HTTPHEADER =array(
-        //             'Authorization: Bearer iCA5gFJkrwLUZ4jW',
-        //             'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
-        //           );
-        // }
+        }else{
+            $curlurl = "https://api.smartpay.net.ph/order";
+            $HTTPHEADER =array(
+                    'Authorization: Bearer iCA5gFJkrwLUZ4jW',
+                    'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
+                  );
+        }
        
     //https://api-test.smartpay.net.ph/order
     //https://api.smartpay.net.ph/order

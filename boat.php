@@ -10,12 +10,12 @@
     // $result_arr["resultvalue"]=array();
     $result=[];
     $requestfor=$params["requestfor"];
-  
     switch ($requestfor) {
         case 'getboat':
             $query=json_encode($params["data"]);
           //  print_r(("call sp_getboat('".$query."')"));
             $qr = excecutequery("call sp_getboat('".$query."')");
+            
             while ($row = $qr->fetch_assoc()) {
                 $id = $row['id'];
                 $isactive = $row['isactive'];
@@ -51,6 +51,7 @@
                     "resultvalue"=>"No data  found"
                 );
             }
+            
             echo json_encode($result[0]);
             
         break;
@@ -59,14 +60,17 @@
             //  print_r(("call sp_getboat('".$query."')"));
             $qr = excecutequery("call sp_getboatcapacity('".$query."')");
            // print_r(("call sp_getboatcapacity('".$query."')"));
-            while ($row = $qr->fetch_assoc()) {
+          
+           while ($row = $qr->fetch_assoc()) {
                 $capacity = $row['capacity'];
                 $boatcount = $row['boatcount'];
                 $twowayprice = $row['twowayprice'];
+                $boattype = $row['boattype'];
                 $return_arr[] = array(
                     "capacity" => $capacity,
                     "boatcount" => $boatcount,
-                    "twowayprice"=>$twowayprice
+                    "twowayprice"=>$twowayprice,
+                    "boattype"=>$boattype
                 );
             }
             if(!(empty($return_arr))){

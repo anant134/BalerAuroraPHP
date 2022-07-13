@@ -67,9 +67,62 @@
             }
             echo json_encode($result[0]);
         break;
+        case 'transactionlog_new':
+            $query=json_encode($params["data"]);
+            $qr = excecutequery("call sp_gettransactionlog_new('".$query."')");
+            while ($row = $qr->fetch_assoc()) {
+                $id = $row['id'];
+                $primaryguest = $row['primaryguest'];
+                $other = $row['other'];
+                $vehicle= $row['vehicle'];
+                $email=$row["email"];
+                $fromdate=$row["fromdate"];
+                $todate=$row["todate"];
+                $qrcode=$row["qrcode"];
+                $slotid=$row["slotid"];
+                $pax=$row["pax"];
+                $buybracelet=$row["buybracelet"];
+                $rentbracelet=$row["rentbracelet"];
+                $hotel=$row["hotel"];
+                $mobilenumber=$row["mobilenumber"];
+                $paymentreferencenumber=$row["paymentreferencenumber"];
+                
+                $return_arr[] = array(
+                    "id" => $id,
+                    "primaryguest"=>$primaryguest,
+                    "other"=>$other,
+                    "vehicle"=>$vehicle,
+                    "email"=>$email,
+                    "fromdate"=>$fromdate,
+                    "todate"=>$todate,
+                    "qrcode"=>$qrcode,
+                    "slotid"=>$slotid,
+                    "pax"=>$pax,
+                    "buybracelet"=>$buybracelet,
+                    "rentbracelet"=>$rentbracelet,
+                    "hotel"=>$hotel,
+                    "mobilenumber"=>$mobilenumber,
+                    "paymentreferencenumber"=>$paymentreferencenumber
+
+                );
+            }
+            if(!(empty($return_arr))){
+                $result[]=array(
+                    "resultkey"=>1,
+                    "resultvalue"=>$return_arr
+                );
+               
+            }else{
+                $result[]=array(
+                    "resultkey"=>0,
+                    "resultvalue"=>"No data  found"
+                );
+            }
+            echo json_encode($result[0]);
+        break;
         case 'feebreakdown':
             $query=json_encode($params["data"]);
-            $qr = excecutequery("call sp_feebreakdownreport('{}')");
+            $qr = excecutequery("call sp_feebreakdownreport('".$query."')");
             while ($row = $qr->fetch_assoc()) {
                 $pax = $row['pax'];
                 $buybracelet = $row['buybracelet'];
@@ -82,6 +135,7 @@
                 $prkchrg=$row["prkchrg"];
                 $boatname=$row["boatname"];
                 $BoatFee=$row["BoatFee"];
+                $discount=$row["discount"];
                 $totalcharge=$row["totalcharge"];
                 $fromdate=$row["fromdate"];
                 $todate=$row["todate"];
@@ -102,6 +156,7 @@
                     "prkchrg"=>$prkchrg,
                     "boatname"=>$boatname,
                     "BoatFee"=>$BoatFee,
+                    "discount"=>$discount,
                     "totalcharge"=>$totalcharge,
                     "fromdate"=>$fromdate,
                     "todate"=>$todate,

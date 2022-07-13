@@ -8,17 +8,17 @@ include("dbconfig.php");
 
 function  geturl($url,$connectedtolive){
     $curl = curl_init();
-    //if($connectedtolive==0){
+    if($connectedtolive==0){
     $HTTPHEADER =array(
         'Authorization: Bearer dypfHwt0s7QZ8XIh',
         'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
         );
-    // }else{
-    //     $HTTPHEADER =array(
-    //             'Authorization: Bearer iCA5gFJkrwLUZ4jW',
-    //             'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
-    //         );
-    // }
+    }else{
+        $HTTPHEADER =array(
+                'Authorization: Bearer iCA5gFJkrwLUZ4jW',
+                'Cookie: ci_session=dnh8nqmon39u2446b4dn003vat'
+            );
+    }
     //https://api-test.smartpay.net.ph/order
     //https://api.smartpay.net.ph/order
 
@@ -49,9 +49,9 @@ function  geturl($url,$connectedtolive){
  
 
  //if($connectedtolive==1){
-  //  $url="https://api.smartpay.net.ph/order?reference_number=".$_GET["reference_number"];
+    $url="https://api.smartpay.net.ph/order?reference_number=".$_GET["reference_number"];
 //   }else{
-   $url="https://api-test.smartpay.net.ph/order?reference_number=".$data["reference_number"];
+//     $url="https://api-test.smartpay.net.ph/order?reference_number=".$data["reference_number"];
 //   }
   $url= geturl($url,$connectedtolive);
 

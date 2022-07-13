@@ -1,10 +1,21 @@
 <?php
+//ms sql
+// $serverName = "DESKTOP-FKNUV0A";  
+// $connectionInfo = array( "Database"=>"datacapturing");  
+// $conn = sqlsrv_connect( $serverName, $connectionInfo); 
 
+//my sql
+
+
+// $dbhost = 'localhost:3309';
+// $dbuser = 'root';
+// $dbpass = 'root';
+// $db='tourbooking';
 //"https://maubantourism.smartpay.ph";
 //https://tourism-test.smartpay.ph
-$weburl='https://tourism-test.smartpay.ph';
+$weburl='https://maubantourism.smartpay.ph';
 
-$connectedtolive=0;
+$connectedtolive=1;
 
 
 function excecutequery($sqlquery)
@@ -12,7 +23,7 @@ function excecutequery($sqlquery)
     $dbhost = 'mauban-rds.c3vmdc1lq3gg.ap-southeast-1.rds.amazonaws.com';
     $dbuser = 'admin';
     $dbpass = 'MaubanI2t123';
-    $db='tourbooking_test';
+    $db='tourbooking';
     $conn = mysqli_connect($dbhost, $dbuser, $dbpass,$db) or die ("could not connect to mysql");
     $result = $conn->query($sqlquery);
     mysqli_close($conn);
