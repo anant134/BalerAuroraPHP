@@ -28,7 +28,7 @@ function queryexcecute($sqlquery)
     $dbhost = 'mauban-rds.c3vmdc1lq3gg.ap-southeast-1.rds.amazonaws.com';
     $dbuser = 'admin';
     $dbpass = 'MaubanI2t123';
-    $db='tourbooking';
+    $db='baleraurora_test';
     $conn = mysqli_connect($dbhost, $dbuser, $dbpass,$db) or die ("could not connect to mysql");
     $result = $conn->query($sqlquery);
     mysqli_close($conn);

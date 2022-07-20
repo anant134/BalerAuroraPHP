@@ -13,7 +13,7 @@
 // $db='tourbooking';
 //"https://maubantourism.smartpay.ph";
 //https://tourism-test.smartpay.ph
-$weburl='https://maubantourism.smartpay.ph';
+$weburl='https://tourism-test.smartpay.ph';
 
 $connectedtolive=1;
 
@@ -23,7 +23,12 @@ function excecutequery($sqlquery)
     $dbhost = 'mauban-rds.c3vmdc1lq3gg.ap-southeast-1.rds.amazonaws.com';
     $dbuser = 'admin';
     $dbpass = 'MaubanI2t123';
-    $db='tourbooking';
+    $db='baleraurora_test';
+    // $dbhost = 'localhost';
+    // $dbuser = 'root';
+    // $dbpass = 'root';
+    // $db='baleraurora';
+   
     $conn = mysqli_connect($dbhost, $dbuser, $dbpass,$db) or die ("could not connect to mysql");
     $result = $conn->query($sqlquery);
     mysqli_close($conn);
