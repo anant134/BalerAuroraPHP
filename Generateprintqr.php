@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 
 
 
-    function random_string($length) {
+ function random_string($length) {
         $key = '';
         $keys = array_merge(range(0, 9), range('a', 'z'));
     
