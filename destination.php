@@ -1,6 +1,4 @@
 <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: PUT, GET, POST");
     header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
@@ -13,21 +11,19 @@
     $result=[];
     $requestfor=$params["requestfor"];
     switch ($requestfor) {
-         //role
-         case 'getrole':
+        case 'getdestination':
             $query=json_encode($params["data"]);
-            $qr = excecutequery("call sp_getrole('".$query."')");
+            $qr = excecutequery("call sp_getdestination('".$query."')");
             while ($row = $qr->fetch_assoc()) {
                 $id = $row['id'];
                 $isactive = $row['isactive'];
-                $rolename = $row['rolename'];
-                $menuitem=$row['menuitem'];
+                $name = $row['name'];
             
                 $return_arr[] = array(
                     "id" => $id,
-                    "isactive"=>$isactive,
-                    "rolename"=>$rolename,
-                    "menuitem"=>$menuitem,
+                    "name" => $name,
+                    "isactive"=>$isactive
+                   
                 );
             }
             if(!(empty($return_arr))){
@@ -43,8 +39,8 @@
                 );
             }
             echo json_encode($result[0]);
-        break;
-       
+            break;
+        case 'destination':
+            break;
     }
-   
-?>
+    ?>

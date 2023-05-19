@@ -15,7 +15,7 @@
         case 'getGuestArrived':
             
             $qr = excecutequery("call sp_getGuestArrived('{}')");
-            
+            print($qr);
             while ($row = $qr->fetch_assoc()) {
                 $count = $row['count'];
                 $mnt = $row['mnt'];
@@ -80,7 +80,21 @@
             $citizenshipresult=[];
             $provinceresult=[];
             $municipalityresult=[];
+            $destinationresult=[];
+            $discountresult=[];
+            $destinationqr = excecutequery("call sp_getdestination('".$query."')");
+            while ($row = $destinationqr->fetch_assoc()) {
+                $id = $row['id'];
+                $isactive = $row['isactive'];
+                $name = $row['name'];
             
+                $destinationresult[] = array(
+                    "id" => $id,
+                    "name" => $name,
+                    "isactive"=>$isactive
+                   
+                );
+            }
             $slotqr = excecutequery("call sp_getslots('".$query."')");
             while ($row = $slotqr->fetch_assoc()) {
                 $id = $row['id'];
@@ -186,7 +200,26 @@
                     "provinceid"=>$provinceid
                 );
             }
-
+          
+            $discoutnqr = excecutequery("call sp_getdiscounts('".$query."')");
+            while ($row = $discoutnqr->fetch_assoc()) {
+                $id = $row['id'];
+                $isactive = $row['isactive'];
+                $description = $row['description'];
+                $value = $row['value'];
+                $discounttypeid = $row['discounttypeid'];
+                $valuetype = $row['valuetype'];
+                
+            
+                $discountresult[] = array(
+                    "id" => $id,
+                    "isactive"=>$isactive,
+                    "description"=>$description,
+                    "value"=>$value,
+                    "discounttypeid"=>$discounttypeid,
+                    "valuetype"=>$valuetype,
+                );
+            }
             $result[]=array(
                 "resultkey"=>1,
                 "resultvalue"=>array("slotdata"=>$slotresult,
@@ -195,11 +228,12 @@
                 "country"=>$countryresult,
                 "citizenship"=>$citizenshipresult,
                 "province"=>$provinceresult,
-                "municipality"=>$municipalityresult
-                
+                "municipality"=>$municipalityresult,
+                "destination"=>$destinationresult,
+                "discount"=>$discountresult
                 )
             );
-
+           
             echo json_encode($result[0]);
         break;
 

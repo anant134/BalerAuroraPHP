@@ -5,6 +5,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 include("dbconfig.php");
 define("SECRETKEY", "i2ttourbooking");
 include("generateqr.php");
+error_reporting(E_ALL);
 //include("tickectgeneration.php");
 $params = (array) json_decode(file_get_contents('php://input'), TRUE);
 $result_arr = [];
@@ -35,6 +36,39 @@ switch ($requestfor) {
 
 
             break;
+    case 'registration_test_baler_aurora_test':
+        $query = json_encode($params["data"]);
+        $dasa=json_decode($query, true);
+        $customer_email=$dasa["touristinfo"][0]["emailid"];
+        $customer_name=$dasa["touristinfo"][0]["Firstname"];
+        $totalchrg=number_format((float)$dasa["totalcharge"], 2, '.', '');
+        $filename=random_string(6);
+        $array =[];
+        $url="Tes";
+        $qr = excecutequery("call sp_saveregistration('" . $query . "')");
+        
+        // while ($row = $qr->fetch_assoc()) {
+        //     //print_r($row);
+        //     // $id = $row['id'];
+        //     // $errflag = $row['errflag'];
+        //     // $paymentid = $row['paymentid'];
+        //     // $paymentidwithreg = $row['paymentidwithreg'];
+        //     // $return_arr[] = array(
+        //     //     "rowid" => $id,
+        //     //     "errflag" => $errflag,
+        //     //     "paymentid" => $paymentid,
+        //     //     "paymentidwithreg" => $paymentidwithreg
+                
+        //     // );
+        // }
+        
+                $result[] = array(
+                    "resultkey" => 0,
+                    "resultvalue" =>"call sp_saveregistration('" . $query . "')"
+                );
+            
+                echo json_encode($result[0]);
+            break;
     case 'registration_test_baler_aurora':
         $query = json_encode($params["data"]);
         $dasa=json_decode($query, true);
@@ -43,11 +77,10 @@ switch ($requestfor) {
         $totalchrg=number_format((float)$dasa["totalcharge"], 2, '.', '');
         $filename=random_string(6);
         $array =[];
-         $qr = excecutequery("call sp_saveregistration('" . $query . "')");
-     //  print_r("call sp_saveregistration('" . $query . "')");
+     //   print_r( "call sp_saveregistration('" . $query . "')");
+        $qr = excecutequery("call sp_saveregistration('" . $query . "')");
         while ($row = $qr->fetch_assoc()) {
             $id = $row['id'];
-        //    print_r($row['id']);
             $errflag = $row['errflag'];
             $decodedata=json_decode($query, true);
             $paymentid = $row['paymentid'];
@@ -67,17 +100,18 @@ switch ($requestfor) {
         if (!(empty($return_arr))) {
           
 
-              // // $mordernum= mt_rand(100000, 999999);
             $rawdata = array(
                 "merchant_order_no" => $return_arr[0]["paymentid"],
                 "amount" => $totalchrg,
                 "currency" => "PHP",
                 "customer_email" => $customer_email,
                 "customer_name" => $customer_name,
-                "description" => "Mauban Tourism",
+                "description" => "Baler Tourism",
             
                 
             );
+           // print_r("00000");
+           // print_r($rawdata);
           //mauban     $digest=_generate_digest($rawdata,'b52477dc0080408713269429e82ce7f7');
           //gigantes
            $digest=_generate_digest($rawdata,'CTKRZh13OTMWbcGDuQnGXw3N8');
@@ -87,21 +121,15 @@ switch ($requestfor) {
                 "currency" => "PHP",
                 "customer_email" => $customer_email,
                 "customer_name" => $customer_name,
-                "description" => "Mauban Tourism",
+                "description" => "Baler Tourism",
                 'digest' => $digest);
-           // $conn->next_result();
+             //   print_r($data);
             $qr = excecutequery("call sp_paymentlog('" .json_encode($data). "','".$return_arr[0]["rowid"]."','s')");
-            //payment sent log
             $url= geturl($data,1);
-            //payment sent log
-           // $conn->next_result();
+           
             $qr = excecutequery("call sp_paymentlog('" .$url. "','".$return_arr[0]["rowid"]."','r')");
-            //payment sent log
-            // $url= geturl($data);
              $return_arr['url'] = $url; 
              $json = json_decode($url, true);
-        
-            //qr generation
             $vehids =[];
             $filename=random_string(6);
             $array[] =  array(
@@ -109,40 +137,10 @@ switch ($requestfor) {
                 "data" =>$return_arr[0]["rowid"].'_0'
                 
             );
-            // for ($i = 0; $i < count($dasa["touristvehicles"]); $i++) {
-            //     $filename=random_string(6);
-            //     $array[] =  array(
-            //         "filename" => 'qrv'.$filename.'_',
-            //         "data" =>$return_arr[0]["rowid"].'_'.$dasa["touristvehicles"][$i]["id"].$i
-                    
-            //     );
-            //     $vehids[]=array(
-            //         'vehid'=>$dasa["touristvehicles"][$i]["id"]
-            //     );
-            // }
             $qrfiles= genqr($array);
-           // print_r("call sp_updateqrcodes('" .json_encode($qrfiles) . "',1)");
             $vehfiles =[];
             $qrfilesarr=[];
-            // $vehdata=($dasa["touristvehicles"]);
-            // if(count($vehdata)>0){
-            //     for ($i = 0; $i < count($qrfiles); $i++) {
-            //         if($i==0){
-        
-            //         }else{
-            //             $qrfiles[$i]["vehid"]=$vehdata[$i-1]["id"];
-            //             // $qrfilesarr=array($qrfiles[$i]);
-            //             $vehfiles[]=$qrfiles[$i];
-            //         }
-            //     }
-               
-            // }
-           
-            
-//            "call sp_updateqrcodes('" .json_encode($vehfiles) . "',".$return_arr[0]["rowid"].")");
-
-  
-            if($json['results']['message']=='Success.'){
+           if($json['results']['message']=='Success.'){
                 //$conn->next_result();
                 $qr = excecutequery("call sp_updatepaymentreferencenumber('" . $json['results']['data']['reference_number']. "','".$return_arr[0]["rowid"]."','".$qrfiles[0]["qrfilename"]."')");
                

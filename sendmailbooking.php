@@ -8,18 +8,19 @@ function sendmail($reference_number){
     include("dbconfig.php");
 //$url="https://maubantourism.smartpay.ph";
 //if($connectedtolive==0){
-    $url=$weburl;
+    $url="https://balertourism.smartpay.ph/balertourism/balertourismphp";
+ 
 //}
 //$mail = new PHPMailer();
-
-    $qr1 = excecutequery("call sp_getvehicleinfo('".$reference_number."')");
-    $veh="";
-    while ($row1 = $qr1->fetch_assoc()) {
-       $veh=$veh.' <td
-            style="color: #153643;font-family: Arial, sans-serif;font-size: 16px;line-height: 24px;padding: 25px 0 0 0;">
-            <img src="'.$url.'/tourbookingphp/tempdata/'.$row1['filename'].'" alt="Creating Email Magic." width="80" height="80" style="display: block;" />
-        </td>';
-    }
+$veh="";
+    // $qr1 = excecutequery("call sp_getvehicleinfo('".$reference_number."')");
+    // 
+    // while ($row1 = $qr1->fetch_assoc()) {
+    //    $veh=$veh.' <td
+    //         style="color: #153643;font-family: Arial, sans-serif;font-size: 16px;line-height: 24px;padding: 25px 0 0 0;">
+    //         <img src="'.$url.'/tempdata/'.$row1['filename'].'" alt="Creating Email Magic." width="80" height="80" style="display: block;" />
+    //     </td>';
+    // }
     // $conn->next_result();
   $qr = excecutequery("call sp_getregistrationinfo('".$reference_number."')");
   while ($row = $qr->fetch_assoc()) {
@@ -51,7 +52,7 @@ function sendmail($reference_number){
                     style="border-collapse: collapse; border: 1px solid #cccccc;">
                     <tr>
                         <td align="center" bgcolor="#70bbd9" style="padding: 40px 0 30px 0;">
-                            <img src="'.$url.'/tourbookingphp/images/smartpay.PNG"
+                            <img src="'.$url.'/images/smartpay.PNG"
                                 alt="Creating Email Magic." width="100%" height="230" style="display: block;" />
                         </td>
                     </tr>
@@ -67,7 +68,7 @@ function sendmail($reference_number){
                                 <tr>
                                     <td
                                         style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; padding: 20px 0 30px 0;">
-                                        <p style="margin: 0;">We have successfully received your payment for your Mauban
+                                        <p style="margin: 0;">We have successfully received your payment for your 
                                             Tour, below are the transaction details:.</p>
                                     </td>
                                 </tr>
@@ -103,12 +104,7 @@ function sendmail($reference_number){
                                                                 Number of Guest:
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td
-                                                                style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; padding: 25px 0 0 0;">
-                                                                Number Vehicle:
-                                                            </td>
-                                                        </tr>
+                                                       
 
                                                     </table>
                                                 </td>
@@ -141,12 +137,7 @@ function sendmail($reference_number){
                                                                 '.$row['pax'].'
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td
-                                                                style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px; padding: 25px 0 0 0;">
-                                                                '.$row['vehicle'].'
-                                                            </td>
-                                                        </tr>
+                                                       
                                                     </table>
                                                 </td>
                                             <tr>
@@ -183,7 +174,7 @@ function sendmail($reference_number){
                                                                             <tr >
                                                                                 <td
                                                                                     style="color: #153643;font-family: Arial, sans-serif;font-size: 16px;line-height: 24px;padding: 25px 0 0 0;">
-                                                                                    <img src="'.$url.'/tourbookingphp/tempdata/'.$row['qrcode'].'"
+                                                                                    <img src="'.$url.'/tempdata/'.$row['qrcode'].'"
                                                                                     alt="Creating Email Magic." width="50%" height="120" style="display: block;" />
                                                                                 </td>
                                                                             </tr>
@@ -205,57 +196,7 @@ function sendmail($reference_number){
                             </table>
                         </td>
                     </tr>
-                    <tr>
-                                                <td>
-                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%"
-                                                        style="border-collapse: collapse;">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td width="260" valign="top">
-                                                                    <table border="0" cellpadding="0" cellspacing="0"
-                                                                        width="100%" style="border-collapse: collapse;">
-                                                                        <tbody >
-                                                                            <tr >
-                                                                                <td
-                                                                                    style="color: #153643;font-family: Arial, sans-serif;font-size: 16px;line-height: 24px;padding: 25px 0 0 0;">
-                                                                                    Vehicle QR Code
-                                                                                </td>
-                                                                            </tr>
-
-
-
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                                <td style="font-size: 0; line-height: 0;" width="20">
-                                                                    &nbsp;</td>
-
-                                                            </tr>
-                                                            <tr>
-                                                                <td width="260" valign="top">
-                                                                    <table border="0" cellpadding="0" cellspacing="0"
-                                                                        width="100%" style="border-collapse: collapse;">
-                                                                        <tbody >
-                                                                            <tr >'.
-                                                                        
-                                                                            $veh
-                                                                               
-                                                                          .  '</tr>
-
-
-
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                                <td style="font-size: 0; line-height: 0;" width="20">
-                                                                    &nbsp;</td>
-
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-
+                   
 
                     <tr>
                         <td>
@@ -307,13 +248,12 @@ function sendmail($reference_number){
 //   $mail->Username = "DOT_Mauban@smartpay.ph";
 //   $mail->Password = "M@ub@n2021"; 
 //   $mail->setFrom("DOT_Mauban@smartpay.ph");
-  $mail->Username = "maubanmailer@gmail.com";
-  $mail->Password = "mauban@123"; 
-  $mail->setFrom("maubanmailer@gmail.com");
+  $mail->Username = "balerauroratour@gmail.com";
+  $mail->Password = "qntcifyegzmydcpk"; 
+  $mail->setFrom("balerauroratour@gmail.com");
   $mail->AddAddress($Mto);	
-  $mail->Subject = "Mauban Tourism Receipt";
+  $mail->Subject = "Tourism Receipt";
   $mail->Body =  $message ;
-  $mail->addBcc("randyfutalan83@gmail.com");
   $mail->addBcc("admin@smartpay.ph");
   $mail->addBcc("anant.shetty.134@gmail.com");
    if(!$mail->Send()) {

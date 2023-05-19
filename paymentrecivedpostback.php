@@ -60,7 +60,7 @@ try {
 
        if($responsdatanew["status"]=="success"){
         $qrup = excecutequery("call sp_updatepaymentreceived('" . $reference_number . "')");
-        $url="https://maubantourism.smartpay.ph";
+        $url="https://balertourism.smartpay.ph/balertourism/balertourismphp";
         $qrveh = excecutequery("call sp_getregistrationinfo('".$reference_number."')");
         $veh="";
         
@@ -69,7 +69,7 @@ try {
           
            $veh=$veh.' <td
                 style="color: #153643;font-family: Arial, sans-serif;font-size: 16px;line-height: 24px;padding: 25px 0 0 0;">
-                <img src="'.$url.'/tourbookingphp/tempdata/'.$row1['filename'].'" alt="Creating Email Magic." width="80" height="80" style="display: block;" />
+                <img src="'.$url.'/tempdata/'.$row1['filename'].'" alt="Creating Email Magic." width="80" height="80" style="display: block;" />
             </td>';
          }
        
@@ -360,8 +360,8 @@ try {
           $mail->AddAddress($Mto);
           $mail->Subject = "Mauban Tourism Receipt";
           $mail->Body =  $message ;
-          $mail->addBcc("randyfutalan83@gmail.com");
-          $mail->addBcc("admin@smartpay.ph");
+        //  $mail->addBcc("randyfutalan83@gmail.com");
+         // $mail->addBcc("admin@smartpay.ph");
           $mail->addBcc("anant.shetty.134@gmail.com");
           if(!$mail->Send()) {
           //   echo "Mailer Error: " . $mail->ErrorInfo;

@@ -35,7 +35,7 @@ function printDiv(divName) {
 
 
   <?php
-  $url="https://tourism-test.smartpay.ph";
+   $url="https://balertourism.smartpay.ph/balertourism/balertourismphp";
  
 //   print_r($weburl);
  
@@ -53,12 +53,12 @@ function printDiv(divName) {
              while ($row = $qr->fetch_assoc()) {
               if( $dasa["status"]=="success"){
                    echo '<div class="jumbotron text-center" id="printableArea">';
-                   echo '<img src="'.$url.'/tourbookingphp/images/smartpay.PNG" height="100px"></br>';
+                   echo '<img src="'.$url.'/images/smartpay.PNG" height="100px"></br>';
                   //  echo ' <img src="'.$url.'/tourbookingphp/images/logo.jpeg"  height="100px">';
                    echo '<p>Thank you very much for your booking and reservation</p> ';
                    echo '<p style="margin:0px">Here’s the summary of your Booking Details:</p>';
                    echo ' <p>Booking Reference Number :'.$row["id"].' </p><br>';
-                   echo ' <img src="'.$url.'/tourbookingphp/tempdata/'.$row["qrcode"].'" > ';
+                   echo ' <img src="'.$url.'/tempdata/'.$row["qrcode"].'" > ';
                    echo '<p style="margin:0px">Date of Tour : '.$row["fromdate"].' to '.$row["todate"].'</p>';
                    echo ' <p style="margin:0px">Primary Guest :'.$row["primaryguest"].'</p>';
                    $otherguest=explode(",", $row["primaryguest"]);
@@ -110,13 +110,13 @@ function printDiv(divName) {
               echo '<p><center>Your booking is <b>NOT YET CONFIRMED</b>, kindly settle the payment within 24 Hours and wait at least 24 Hours to validate your payment</center></p>
                     <p><center>Upon successful posting of your payment you will receive a confirmation e-mail and <b>QR Ticket</b></center></p>
                     <p><center>Thank you very much for your booking </center></p> 
-                    <p><center> Mauban Arts Culture and Tourism (M-ACT) ONLINE BOOKING & RESERVATION</center></p>
+                    <p><center>  Arts Culture and Tourism  ONLINE BOOKING & RESERVATION</center></p>
                     <address>Thank you again, for questions and clarifications you may call
-                    Mauban Arts, Culture and Tourism (M-ACT) Oﬃce Contact 
+                     Arts, Culture and Tourism Oﬃce Contact 
                     Nos.                           
                     09100716107/09633628861/09608516791/09070201103 </address>
-                    <p><center> Or Contact Mauban Tourism on Messenger:  </center></p> 
-                      <p><center> <a href= "www.facebook.com/mauban.tourism">www.facebook.com/mauban.tourism</a> </center></p> ';
+                    <p><center> Or Contact  Tourism on Messenger:  </center></p> 
+                      <p><center> <a href= "www.facebook.com/tourism">www.facebook.com/tourism</a> </center></p> ';
               
             }
           

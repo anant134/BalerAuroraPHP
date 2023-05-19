@@ -64,7 +64,7 @@
                 $roleid = $row['roleid'];
                 $roleid = $row['roleid'];
                 $rolename = $row['rolename'];
-                $ismapped = $row['ismapped'];
+              //  $ismapped = $row['ismapped'];
                 $return_arr[] = array(
                     "id" => $id,
                     "username" => $username,
@@ -72,7 +72,7 @@
                     "email"=>$email,
                     "roleid"=>$roleid,
                     "rolename"=>$rolename,
-                    "ismapped"=>$ismapped,
+                  //  "ismapped"=>$ismapped,
                 );
             }
             if(!(empty($return_arr))){
@@ -149,7 +149,8 @@
                                 "isreturningguest" => $isreturningguest,
                                 "isbraceletreturned" => $isbraceletreturned,
                                 "isbraceletavailable" => $isbraceletavailable,
-                                "touristid"=>$touristid
+                                "touristid"=>$touristid,
+                                "isScaned"=>false
                             );
                         }
                         $return_arr[] = array(
@@ -446,7 +447,7 @@
                 }
                 echo json_encode($result[0]);
                 break;
-        case 'user':
+        case 'user_old':
             $query=json_encode($params["data"]);
             $dasa=json_decode($query, true);
             $dasa["password"]= openssl_encrypt($dasa["password"], "AES-128-ECB", SECRETKEY);
@@ -635,6 +636,108 @@
                 $result[]=array(
                     "resultkey"=>0,
                     "resultvalue"=>"No data  found"
+                );
+            }
+            echo json_encode($result[0]);
+            break;
+        case 'touristscaned':  
+            $query=json_encode($params["data"]);
+            // $qr = excecutequery("call sp_checktouristscan('".$query."')");
+            // while ($row = $qr->fetch_assoc()) {
+            //     $count = $row['count'];
+            //     $result_checktourist[] = array(
+            //         "count" => $count,
+            //     );
+            // }
+            // if(!(empty($result_checktourist))){
+            //    if($result_checktourist[0]["count"]>0){
+            //     $result[]=array(
+            //         "resultkey"=>0,
+            //         "resultvalue"=>"Tourist Already scanned."
+            //     );
+            //     echo json_encode($result[0]);
+            //    } 
+            // }else{
+               
+            // }
+            $qr1 = excecutequery("call sp_touristscan('".$query."')");
+            while ($row1 = $qr1->fetch_assoc()) {
+                $errflag = $row1['errflag'];
+                $errmsg = $row1['errmsg'];
+                $firstname = $row1['firstname'];
+                $lastname = $row1['lastname'];
+                $rfid = $row1['rfid'];
+                $gender = $row1['gender'];
+                $registrationid=$row1['registrationid'];
+                $touristid = $row1['id'];
+                $result_arrtourist[] = array(
+                    "firstname" => $firstname,
+                    "lastname" => $lastname,
+                    "rfid" => $rfid,
+                    "gender" => $gender,
+                    "touristid"=>$touristid,
+                    "isScaned"=>true
+                );
+                $return_arr[] = array(
+                    "errflag"=>$errflag,
+                    "errmsg"=>$errmsg,
+                    "tourist"=>$result_arrtourist,
+                );
+            }
+            
+            
+            if(!(empty($return_arr))){
+                $result[]=array(
+                    "resultkey"=>1,
+                    "resultvalue"=>$return_arr
+                );
+               
+            }else{
+                $result[]=array(
+                    "resultkey"=>0,
+                    "resultvalue"=>"Error data not saved"
+                );
+            }
+            echo json_encode($result[0]);
+            
+            break;
+        case 'user':
+            $query=json_encode($params["data"]);
+            $dasa=json_decode($query, true);
+           
+            if($dasa["flag"]=="u"){
+                $dasa["isactive"]=$dasa["isactive"]=="1"?1:0;
+                $query=json_encode($dasa);
+            }
+            if($dasa["flag"]=="u"){
+                if($dasa["password"]!=""){
+                    $dasa["password"]= openssl_encrypt($dasa["password"], "AES-128-ECB", SECRETKEY);
+                }    
+            }else{
+                $dasa["password"]= openssl_encrypt($dasa["password"], "AES-128-ECB", SECRETKEY);
+            }
+            $query=json_encode($dasa);
+            $qr = excecutequery("call sp_user('".$query."')");
+           
+            while ($row = $qr->fetch_assoc()) {
+                $id =$row['rowid'] ;
+                $errflag =$row['errflag'] ;
+                // $id = $row['rowid'];
+                $return_arr[] = array(
+                    "rowid" => $id,
+                    "errflag"=>$errflag
+                );
+            }
+            if(!(empty($return_arr))){
+                $result[]=array(
+                    "resultkey"=>1,
+                    "resultvalue"=>$return_arr
+                );
+               
+            }else{
+                $result[]=array(
+                    "resultkey"=>0,
+                    "resultvalue"=>"Error data not saved"
                 );
             }
             echo json_encode($result[0]);

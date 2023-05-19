@@ -11,26 +11,23 @@
     $result=[];
     $requestfor=$params["requestfor"];
     switch ($requestfor) {
-        case 'getslots':
+        case 'getdevice':
             $query=json_encode($params["data"]);
-            $qr = excecutequery("call sp_getslots('".$query."')");
+            $qr = excecutequery("call sp_getdevice('".$query."')");
             while ($row = $qr->fetch_assoc()) {
                 $id = $row['id'];
                 $isactive = $row['isactive'];
-                $description = $row['description'];
-                $starttime = $row['starttime'];
-                $endtime = $row['endtime'];
-                $timeinterval=$row["timeinterval"];
-               // $boattype=$row["boattype"];
-           
+                $portname = $row['portname'];
+                $name = $row['name'];
+                $deviceid = $row['deviceid'];
+                $assignedport = $row['assignedport'];
                 $return_arr[] = array(
                     "id" => $id,
-                    "description" => $description,
-                    "starttime" => $starttime,
-                    "endtime" => $endtime,
+                    "portname" => $portname,
                     "isactive"=>$isactive,
-                    "timeinterval"=>$timeinterval,
-                   // "boattype"=>$boattype
+                    "name"=>$name,
+                    "deviceid"=>$deviceid,
+                    "assignedport"=>$assignedport
                 );
             }
             if(!(empty($return_arr))){
@@ -48,15 +45,14 @@
             echo json_encode($result[0]);
             break;
         break;
-        case 'slots':
+        case 'device':
             $query=json_encode($params["data"]);
             $dasa=json_decode($query, true);
             if($dasa["flag"]=="u"){
                 $dasa["isactive"]=$dasa["isactive"]=="1"?1:0;
                 $query=json_encode($dasa);
             }
-           
-            $qr = excecutequery("call sp_slot('".$query."')");
+            $qr = excecutequery("call sp_device('".$query."')");
             while ($row = $qr->fetch_assoc()) {
                 $id =$row['rowid'] ;
                 $errflag =$row['errflag'] ;
